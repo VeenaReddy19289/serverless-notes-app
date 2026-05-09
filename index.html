@@ -1,70 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Notes App</title>
+
+  <title>Firebase Notes App</title>
 
   <style>
+
     *{
       margin:0;
       padding:0;
       box-sizing:border-box;
-      font-family:Arial, sans-serif;
+      font-family:'Poppins',sans-serif;
     }
 
     body{
+
       min-height:100vh;
+
       display:flex;
+
       justify-content:center;
+
       align-items:center;
-      background:linear-gradient(135deg,#141e30,#243b55);
+
       padding:20px;
+
+      background:
+      linear-gradient(
+        135deg,
+        #c4b5fd,
+        #93c5fd,
+        #f9a8d4,
+        #bfdbfe
+      );
     }
 
     .container{
+
       width:100%;
-      max-width:500px;
-      background:white;
-      border-radius:20px;
-      padding:30px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.3);
+
+      max-width:520px;
+
+      background:rgba(255,255,255,0.22);
+
+      backdrop-filter:blur(18px);
+
+      border-radius:28px;
+
+      padding:35px;
+
+      box-shadow:
+      0 10px 30px rgba(0,0,0,0.18);
+
+      border:1px solid rgba(255,255,255,0.35);
     }
 
     h1{
+
       text-align:center;
-      margin-bottom:20px;
-      color:#243b55;
+
+      margin-bottom:25px;
+
+      color:white;
+
+      font-size:38px;
     }
 
     .input-box{
+
       display:flex;
-      gap:10px;
-      margin-bottom:20px;
+
+      gap:12px;
+
+      margin-bottom:25px;
     }
 
     input{
+
       flex:1;
-      padding:12px;
+
+      padding:14px;
+
       border:none;
+
       outline:none;
-      border-radius:10px;
-      background:#f1f1f1;
+
+      border-radius:14px;
+
+      background:rgba(255,255,255,0.92);
+
       font-size:16px;
+
+      color:#334155;
     }
 
     .add-btn{
-      padding:12px 18px;
+
+      padding:14px 20px;
+
       border:none;
-      background:#243b55;
-      color:white;
-      border-radius:10px;
+
+      border-radius:14px;
+
       cursor:pointer;
+
+      color:white;
+
+      font-size:15px;
+
+      font-weight:600;
+
+      background:
+      linear-gradient(
+        135deg,
+        #6366f1,
+        #8b5cf6,
+        #ec4899
+      );
+
       transition:0.3s;
     }
 
     .add-btn:hover{
-      background:#141e30;
+
+      transform:
+      translateY(-2px)
+      scale(1.03);
+
+      box-shadow:
+      0 8px 20px rgba(139,92,246,0.35);
     }
 
     ul{
@@ -72,40 +141,73 @@
     }
 
     li{
-      background:#f7f7f7;
-      padding:15px;
-      border-radius:12px;
-      margin-bottom:12px;
+
+      background:rgba(255,255,255,0.25);
+
+      padding:18px;
+
+      border-radius:18px;
+
+      margin-bottom:15px;
+
       display:flex;
+
       justify-content:space-between;
+
       align-items:center;
+
+      backdrop-filter:blur(10px);
+
       transition:0.3s;
     }
 
     li:hover{
+
       transform:scale(1.02);
     }
 
-    .delete-btn{
-      background:#ff4d4d;
-      color:white;
-      border:none;
-      padding:8px 12px;
-      border-radius:8px;
-      cursor:pointer;
-    }
+    .note-text{
 
-    .delete-btn:hover{
-      background:#cc0000;
+      color:white;
+
+      font-size:17px;
+
+      font-weight:500;
     }
 
     .time{
+
       font-size:12px;
-      color:gray;
-      margin-top:5px;
+
+      color:#e2e8f0;
+
+      margin-top:6px;
+    }
+
+    .delete-btn{
+
+      background:#ff4d6d;
+
+      color:white;
+
+      border:none;
+
+      padding:10px 14px;
+
+      border-radius:10px;
+
+      cursor:pointer;
+
+      transition:0.3s;
+    }
+
+    .delete-btn:hover{
+
+      background:#e11d48;
     }
 
   </style>
+
 </head>
 
 <body>
@@ -115,8 +217,20 @@
   <h1>📝 Notes App</h1>
 
   <div class="input-box">
-    <input type="text" id="note" placeholder="Write your note...">
-    <button class="add-btn" onclick="addNote()">Add</button>
+
+    <input
+      type="text"
+      id="note"
+      placeholder="Write your note..."
+    >
+
+    <button
+      class="add-btn"
+      onclick="addNote()"
+    >
+      Add
+    </button>
+
   </div>
 
   <ul id="list"></ul>
@@ -125,60 +239,102 @@
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
 
 import {
+
   getFirestore,
   addDoc,
   collection,
   getDocs,
   deleteDoc,
   doc
-} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+}
+
+from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
+
   apiKey: "AIzaSyD8tcGaBiX0kWWTcwVIwjjbGUr2gJDvsO4",
+
   authDomain: "notes-app-1a8ba.firebaseapp.com",
+
   projectId: "notes-app-1a8ba",
+
   storageBucket: "notes-app-1a8ba.firebasestorage.app",
+
   messagingSenderId: "972315483354",
+
   appId: "1:972315483354:web:c3788730a6269b1490d9e3",
+
   measurementId: "G-N01N5JCBGJ"
+
 };
 
-
 const app = initializeApp(firebaseConfig);
+
 const db = getFirestore(app);
 
-async function addNote() {
+async function addNote(){
 
-  const noteInput = document.getElementById("note");
-  const note = noteInput.value;
+  const noteInput =
+  document.getElementById("note");
 
-  if(note === "") return;
+  const note =
+  noteInput.value;
+
+  if(note === ""){
+
+    alert("Please write a note!");
+
+    return;
+  }
 
   const now = new Date();
 
-  await addDoc(collection(db,"notes"),{
-    text: note,
-    time: now.toLocaleString()
-  });
+  await addDoc(
+
+    collection(db,"notes"),
+
+    {
+
+      text: note,
+
+      time: now.toLocaleString()
+
+    }
+
+  );
 
   noteInput.value = "";
 
   loadNotes();
+
 }
 
 async function deleteNote(id){
-  await deleteDoc(doc(db,"notes",id));
+
+  await deleteDoc(
+    doc(db,"notes",id)
+  );
+
   loadNotes();
+
 }
 
 async function loadNotes(){
 
-  const querySnapshot = await getDocs(collection(db,"notes"));
+  const querySnapshot =
 
-  const list = document.getElementById("list");
+  await getDocs(
+    collection(db,"notes")
+  );
+
+  const list =
+  document.getElementById("list");
 
   list.innerHTML = "";
 
@@ -186,18 +342,30 @@ async function loadNotes(){
 
     const data = d.data();
 
-    const li = document.createElement("li");
+    const li =
+    document.createElement("li");
 
     li.innerHTML = `
+
       <div>
-        <div>${data.text}</div>
-        <div class="time">${data.time}</div>
+
+        <div class="note-text">
+          ${data.text}
+        </div>
+
+        <div class="time">
+          ${data.time}
+        </div>
+
       </div>
 
-      <button class="delete-btn"
-      onclick="deleteNote('${d.id}')">
-      Delete
+      <button
+        class="delete-btn"
+        onclick="deleteNote('${d.id}')"
+      >
+        Delete
       </button>
+
     `;
 
     list.appendChild(li);
@@ -209,9 +377,11 @@ async function loadNotes(){
 loadNotes();
 
 window.addNote = addNote;
+
 window.deleteNote = deleteNote;
 
 </script>
 
 </body>
+
 </html>
